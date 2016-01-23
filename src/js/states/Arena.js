@@ -313,7 +313,7 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 		function () {
 			jsonmap.layers[0].data[tilepos] = ARENA;
 			var f = [18, 23, 18];
-			f = f[Math.floor((Math.random() * 3))];
+			f = f[GameCtrl.random(3)];
 			jsonmap.layers[1].data[tilepos] = f;
 		}
 	);
@@ -324,7 +324,7 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 		function () {
 			jsonmap.layers[0].data[tilepos] = ARENA;
 			var f = [18, 23, 18];
-			f = f[Math.floor((Math.random() * 3))];
+			f = f[GameCtrl.random(3)];
 			jsonmap.layers[1].data[tilepos] = f;
 		}
 	);
@@ -709,13 +709,10 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 		// create actors at random locations
 		actorList = [];
 		actorMap = {};
-		var actor, x, y;
 
-		var random = function (max) {
-			return Math.floor(Math.random() * max);
-		};
+		var actor, x, y,
+			validpos = [];
 
-		var validpos = [];
 		for (x = 0; x < COLS; x++) {
 			for (y = 0; y < ROWS; y++) {
 				if (!Map.tiles[x][y]) {
@@ -727,19 +724,20 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 		for (var e = 0; e < ACTORS; e++) {
 			// create new actor
 			do {
-				//var room=m.rooms[random(2)][random(2)];
-				var r = validpos[random(validpos.length)];
+				//var room = m.rooms[GameCtrl.random(2)][GameCtrl.random(2)];
+				var r = validpos[GameCtrl.random(validpos.length)];
+
 				x = r.x;
 				y = r.y;
+
 				// pick a random position that is both a floor and not occupied
-				//x=room.x+random(room.width);
-				//y=room.y+random(room.height);
+				//x = room.x + GameCtrl.random(room.width);
+				//y = room.y + GameCtrl.random(room.height);
 			} while (actorMap[x + '_' + y]);
 
 			actor = (e === 0)
 				? new Player(game, x, y)
 				: new Enemy(game, x, y);
-
 
 			// add references to the actor to the actors list & map
 			actorMap[actor.x + '_' + actor.y] = actor;
@@ -754,10 +752,10 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 
 	function aiAct (actor) {
 		var directions = [
-			{x: -1, y: 0},
-			{x: 1, y: 0},
-			{x: 0, y: -1},
-			{x: 0, y: 1}
+			{x: -1, y:  0},
+			{x:  1, y:  0},
+			{x:  0, y: -1},
+			{x:  0, y:  1}
 		];
 
 		var dx = player.x - actor.x,
@@ -783,11 +781,12 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 				return {
 					x: e.x,
 					y: e.y,
-					dist: Math.pow(dx + e.x, 2) + Math.pow(dy + e.y, 2)
+					dist: Math.pow(dx + e.x, 2)
+					    + Math.pow(dy + e.y, 2)
 				};
-				//}).sort(function(a,b){ return a.dist-b.dist; });
 			}).sort(function (a, b) {
-				return b.dist - a.dist;
+				return b.dist - a.dist; // Brave ones
+				//return a.dist - b.dist; // Cowards
 			});
 
 			for (var d = 0, len = directions.length; d < len; d++) {
@@ -808,7 +807,7 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 
 	function shuffleArray (array) {
 		for (var i = array.length - 1; i > 0; i--) {
-			var j = Math.floor(Math.random() * (i + 1)),
+			var j = GameCtrl.random(i + 1),
 				temp = array[i];
 
 			array[i] = array[j];
@@ -839,7 +838,7 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 
 		var n;
 		for (var i = 0; i < dices; i++) {
-			n = 1 + Math.floor(Math.random() * sides);
+			n = 1 + GameCtrl.random(sides);
 			ret.diceRoll.push(n);
 			ret.number += n;
 		}
