@@ -9,8 +9,8 @@ var ROT = {
 	/**
 	 * @returns {bool} Is rot.js supported by this browser?
 	 */
-	isSupported: function() {
-		return !!(document.createElement("canvas").getContext && Function.prototype.bind);
+	isSupported: function () {
+		return Boolean(document.createElement("canvas").getContext && Function.prototype.bind);
 	},
 
 	/** Default with for display and map generators */

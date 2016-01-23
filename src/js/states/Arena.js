@@ -74,7 +74,9 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 	_map.create(function (x, y, v) {
 		// layer 0 es el "ground"
 		// jsonmap.layers[0].data.push((v===1)? 0 : ARENA);
-		jsonmap.layers[0].data[y * width + x] = (v === 1) ? 0 : ARENA;
+		jsonmap.layers[0].data[y * width + x] = (v === 1)
+			? 0
+			: ARENA;
 
 		// y * width + x <- podria usar esta cuenta pero como esta ordenado uso el push
 	});
@@ -111,45 +113,51 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 	addPattern(
 		'000' +
 		'0*0' +
-		'*1*', function (tilepos, x, y) {
+		'*1*',
+		function (tilepos, x, y) {
+			cbSetBackground(14)();
+			if (y > 0) {
+				jsonmap.layers[1].data[(y - 1) * width + x] = 9;
+			}
+		}
+	);
+
+	addPattern(
+		'000' +
+		'0*0' +
+		'1*1',
+		function (tilepos, x, y) {
 			cbSetBackground(14)();
 			if (y > 0) {
 				jsonmap.layers[1].data[(y - 1) * width + x] = 9;
 			}
 
-		});
+		}
+	);
 
 	addPattern(
 		'000' +
 		'0*0' +
-		'1*1', function (tilepos, x, y) {
-			cbSetBackground(14)();
-			if (y > 0) {
-				jsonmap.layers[1].data[(y - 1) * width + x] = 9;
-			}
-
-		});
-
-	addPattern(
-		'000' +
-		'0*0' +
-		'001', function (tilepos, x, y) {
+		'001',
+		function (tilepos, x, y) {
 			cbSetBackground(6)();
 			if (y > 0) {
 				jsonmap.layers[1].data[(y - 1) * width + x] = 1;
 			}
-
-		});
+		}
+	);
 
 	addPattern(
 		'00*' +
 		'0*1' +
-		'*11', function (tilepos, x, y) {
+		'*11',
+		function (tilepos, x, y) {
 			cbSetBackground(15)();
 			if (y > 0) {
 				jsonmap.layers[1].data[(y - 1) * width + x] = 10;
 			}
-		});
+		}
+	);
 
 	addPattern(
 		'00*' +
@@ -301,26 +309,31 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 	addPattern(
 		'*1*' +
 		'***' +
-		'*1*', function () {
+		'*1*',
+		function () {
 			jsonmap.layers[0].data[tilepos] = ARENA;
 			var f = [18, 23, 18];
 			f = f[Math.floor((Math.random() * 3))];
 			jsonmap.layers[1].data[tilepos] = f;
-		});
+		}
+	);
 	addPattern(
 		'***' +
 		'1*1' +
-		'***', function () {
+		'***',
+		function () {
 			jsonmap.layers[0].data[tilepos] = ARENA;
 			var f = [18, 23, 18];
 			f = f[Math.floor((Math.random() * 3))];
 			jsonmap.layers[1].data[tilepos] = f;
-		});
+		}
+	);
 
 
 	for (var y = 0; y < _map._height; y++) {
 		for (var x = 0; x < _map._width; x++) {
 			jsonmap.layers[1].data.push(0);
+
 			if (_map.map[x][y] === 0) {
 				continue;
 			}
@@ -355,25 +368,35 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 		phaserMap: null,
 		lightDict: {},
 		exist: function (x, y) {
-			return (typeof this.rotmap.map[x] !== 'undefined' && typeof this.rotmap.map[x][y] !== 'undefined' && this.rotmap.map[x][y] === 0) ? '1' : '0';
+			return (
+				   typeof this.rotmap.map[x]    !== 'undefined'
+				&& typeof this.rotmap.map[x][y] !== 'undefined'
+				       && this.rotmap.map[x][y] === 0
+			)
+				? '1'
+				: '0';
 		},
+
 		initMap: function (rotmap, phaserMap) {
 			this.rotmap = rotmap;
 			this.phaserMap = phaserMap;
 			this.tiles = JSON.parse(JSON.stringify(rotmap.map));
+		},
 
-		},
 		canGo: function (actor, dir) {
-			return actor.x + dir.x >= 0 &&
-				actor.x + dir.x < COLS &&
-				actor.y + dir.y >= 0 &&
-				actor.y + dir.y < ROWS &&
-				Map.tiles[actor.x + dir.x][actor.y + dir.y] === 0;
+			return actor.x + dir.x >= 0
+				&& actor.x + dir.x < COLS
+				&& actor.y + dir.y >= 0
+				&& actor.y + dir.y < ROWS
+				&& Map.tiles[actor.x + dir.x][actor.y + dir.y] === 0;
 		},
+
 		light: function () {
 			/* input callback */
 			var lightPasses = function (x, y) {
-				return typeof Map.tiles[x] === 'undefined' || typeof Map.tiles[x][y] === 'undefined' || Map.tiles[x][y] === 0;
+				return typeof Map.tiles[x] === 'undefined'
+					|| typeof Map.tiles[x][y] === 'undefined'
+					|| Map.tiles[x][y] === 0;
 			};
 
 			this.resetLight();
@@ -381,6 +404,7 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 			this.fov = new ROT.FOV.PreciseShadowcasting(lightPasses);
 			this.computeLight();
 		},
+
 		resetLight: function () {
 			var tile, x, y;
 			for (x = 0; x < COLS; x++) {
@@ -393,12 +417,13 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 					 }*/
 
 					tile = Map.phaserMap.getTile(x, y, 0);
+
 					if (tile) {
 						tile.alpha = 0;
 					}
 
-
 					tile = Map.phaserMap.getTile(x, y, 1);
+
 					if (tile) {
 						tile.alpha = 0;
 					}
@@ -406,31 +431,44 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 				}
 			}
 		},
+
 		computeLight: function () {
 			this.resetLight();
 
 			actorList.forEach(function (a) {
 				a.sprite.alpha = 0;
 			});
+
 			actorList[0].sprite.alpha = 1;
-			this.fov.compute(actorList[0].x, actorList[0].y, 10, function (x, y, r, visibility) {
-				/*if(r==4){
-				 visibility=0.5;
-				 }else if(r==5){
-				 visibility=0.25;
-				 }*/
-				var tile = Map.phaserMap.getTile(x, y, 0);
-				if (tile) {
-					tile.alpha = visibility;
+
+			this.fov.compute(
+				actorList[0].x,
+				actorList[0].y,
+				10,
+				function (x, y, r, visibility) {
+					/*if(r==4){
+					 visibility=0.5;
+					 }else if(r==5){
+					 visibility=0.25;
+					 }*/
+
+					var tile = Map.phaserMap.getTile(x, y, 0);
+
+					if (tile) {
+						tile.alpha = visibility;
+					}
+
+					tile = Map.phaserMap.getTile(x, y, 1);
+
+					if (tile) {
+						tile.alpha = visibility;
+					}
+
+					if (actorMap.hasOwnProperty(x + '_' + y)) {
+						actorMap[x + '_' + y].sprite.alpha = visibility;
+					}
 				}
-				tile = Map.phaserMap.getTile(x, y, 1);
-				if (tile) {
-					tile.alpha = visibility;
-				}
-				if (actorMap.hasOwnProperty(x + '_' + y)) {
-					actorMap[x + '_' + y].sprite.alpha = visibility;
-				}
-			});
+			);
 
 			Map.phaserMap.layers[0].dirty = true;
 			Map.phaserMap.layers[1].dirty = true;
@@ -440,14 +478,20 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 	var HUD = {
 		game: null,
 		msg: function (text, sprite, speed, color) {
-			var y = sprite.y - 15;
-			var x = sprite.x + sprite.width / 3;
+			var y = sprite.y - 15,
+				x = sprite.x + sprite.width / 3;
 
-			color = (color) ? color : '#ff0044';
+			color = color || '#ff0044';
 
-			var style = {font: 'bold 19px Courier New, Courier', fill: color, align: 'center'};
+			var style = {
+				font: 'bold 19px Courier New, Courier',
+				fill: color,
+				align: 'center'
+			};
+
 			text = this.game.add.text(x, y, text, style);
 			//text.position=sprite.position;
+
 			this.game.add.tween(text)
 				.to(
 					{alpha: 1},
@@ -506,8 +550,10 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 			var map = this.add.tilemap('ROTmap');
 
 			map.addTilesetImage('forest-tiles', 'forest-tiles');
+
 			var layer1 = map.createLayer('ground');
 			layer1.resizeWorld();
+
 			var layer2 = map.createLayer('decoration');
 			layer2.resizeWorld();
 			//return;
@@ -528,13 +574,14 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 			Map.light();
 
 			var style = {font: '16px monospace', fill: '#fff'};
+
 			playerHUD = this.add.text(0, 0, 'Player life: ' + actorList[0].hp, style);
 			playerHUD.fixedToCamera = true;
 			playerHUD.cameraOffset.setTo(500, 50);
-
-
 		},
+
 		clickeable: true,
+
 		mouseCallback: function () {
 
 			if (this.clickeable && this.input.mousePointer.isDown) {
@@ -544,10 +591,11 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 					g.clickeable = true;
 				}, 400, this);
 
-				var x = this.input.activePointer.worldX;
-				var y = this.input.activePointer.worldY;
-				var dx = Math.abs(player.sprite.x - x);
-				var dy = Math.abs(player.sprite.y - y);
+				var x = this.input.activePointer.worldX,
+					y = this.input.activePointer.worldY,
+					dx = Math.abs(player.sprite.x - x),
+					dy = Math.abs(player.sprite.y - y);
+
 				if (dx > dy) {
 					if (x > player.sprite.x) {
 						this.onKeyUp({keyCode: Phaser.Keyboard.RIGHT});
