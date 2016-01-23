@@ -389,89 +389,6 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 				&& actor.y + dir.y >= 0
 				&& actor.y + dir.y < ROWS
 				&& Map.tiles[actor.x + dir.x][actor.y + dir.y] === 0;
-		},
-
-		light: function () {
-			/* input callback */
-			var lightPasses = function (x, y) {
-				return typeof Map.tiles[x] === 'undefined'
-					|| typeof Map.tiles[x][y] === 'undefined'
-					|| Map.tiles[x][y] === 0;
-			};
-
-			this.resetLight();
-
-			this.fov = new ROT.FOV.PreciseShadowcasting(lightPasses);
-			this.computeLight();
-		},
-
-		resetLight: function () {
-			var tile, x, y;
-			for (x = 0; x < COLS; x++) {
-				for (y = 0; y < ROWS; y++) {
-					/* todo fix para que los sprites de decoracion
-					 / del bosque se vean
-					 var pos=Map.exist(x,y)==='0';
-					 if(tile && pos ){
-					 tile.alpha=1;
-					 }*/
-
-					tile = Map.phaserMap.getTile(x, y, 0);
-
-					if (tile) {
-						tile.alpha = 0;
-					}
-
-					tile = Map.phaserMap.getTile(x, y, 1);
-
-					if (tile) {
-						tile.alpha = 0;
-					}
-
-				}
-			}
-		},
-
-		computeLight: function () {
-			this.resetLight();
-
-			actorList.forEach(function (a) {
-				a.sprite.alpha = 0;
-			});
-
-			actorList[0].sprite.alpha = 1;
-
-			this.fov.compute(
-				actorList[0].x,
-				actorList[0].y,
-				10,
-				function (x, y, r, visibility) {
-					/*if(r==4){
-					 visibility=0.5;
-					 }else if(r==5){
-					 visibility=0.25;
-					 }*/
-
-					var tile = Map.phaserMap.getTile(x, y, 0);
-
-					if (tile) {
-						tile.alpha = visibility;
-					}
-
-					tile = Map.phaserMap.getTile(x, y, 1);
-
-					if (tile) {
-						tile.alpha = visibility;
-					}
-
-					if (actorMap.hasOwnProperty(x + '_' + y)) {
-						actorMap[x + '_' + y].sprite.alpha = visibility;
-					}
-				}
-			);
-
-			Map.phaserMap.layers[0].dirty = true;
-			Map.phaserMap.layers[1].dirty = true;
 		}
 	};
 
@@ -571,8 +488,6 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 
 			initActors(this);
 
-			Map.light();
-
 			var style = {font: '16px monospace', fill: '#fff'};
 
 			playerHUD = this.add.text(0, 0, 'Player life: ' + actorList[0].hp, style);
@@ -631,8 +546,6 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 			}
 
 			if (acted) {
-				Map.computeLight();
-
 				var enemy;
 
 				// i=1, skip the player
