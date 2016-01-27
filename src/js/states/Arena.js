@@ -8,7 +8,7 @@ var ROWS = 30,
 	COLS = 50;
 
 // number of actors per level, including player
-var ACTORS = 2;
+var ACTORS = 25;
 
 
 // a list of all actors; i0 is the player
@@ -422,6 +422,7 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 					Phaser.Easing.Linear.None,
 					true
 				);
+
 			setTimeout(function (t, _self) {
 				_self.world.remove(t);
 			}, speed, text, this.game);
