@@ -4,11 +4,11 @@
 'use strict';
 
 // map dimensions
-var ROWS = 50,
+var ROWS = 30,
 	COLS = 50;
 
 // number of actors per level, including player
-var ACTORS = 25;
+var ACTORS = 2;
 
 
 // a list of all actors; i0 is the player
