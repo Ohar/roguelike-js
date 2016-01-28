@@ -677,11 +677,31 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 	}
 
 	function Actor (game, x, y, keySprite) {
+		var self = this;
+
 		this.hp = 3;
 		this.x = x;
 		this.y = y;
 		this.isPlayer = null;
 		this.damage = 'd8+2';
+		this.look = {
+			direction: 0, // Clockwise: 0, 1, 2, 3
+			angle: 2, // Radians
+			distance: 5,
+			cansee: function (point) {
+				var result = false,
+					distance = GameCtrl.countDistance(self, point);
+
+				if (distance > self.distance) {
+					result = false;
+				} else {
+					var sector = GameCtrl.getSector(self);
+					result = GameCtrl.checkPointInsideSector(sector, point);
+				}
+
+				return result;
+			}
+		};
 
 		if (game) {
 			this.game = game;
