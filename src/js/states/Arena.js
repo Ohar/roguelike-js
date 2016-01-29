@@ -687,7 +687,7 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 		this.look = {
 			direction: 0, // Clockwise: 0, 1, 2, 3
 			angle: 2, // Radians
-			distance: 5,
+			range: 5,
 			cansee: function (point) {
 				var result = false,
 					distance = GameCtrl.countDistance(self, point);

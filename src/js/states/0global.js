@@ -18,13 +18,47 @@ var GameCtrl = {
 	// TODO: get sector sides
 	getSector: function (data) {
 
+		var x1, x2, y1, y2,
+			startAngle = data.look.direction * Math.PI / 2,
+			b = startAngle / 2,
+			A = data.look.range,
+			x = A * Math.sin(b),
+			y = A * Math.cos(b);
+
+		switch (data.look.direction) {
+			case 0:
+				x1 = data.x - x;
+				x2 = data.x + x;
+				y1 = y;
+				y2 = y;
+				break;
+			case 1:
+				x1 = x;
+				x2 = x;
+				y1 = data.y - y;
+				y2 = data.y + y;
+				break;
+			case 2:
+				x1 = data.x + x;
+				x2 = data.x - x;
+				y1 = y;
+				y2 = y;
+				break;
+			case 3:
+				x1 = x;
+				x2 = x;
+				y1 = data.y + y;
+				y2 = data.y - y;
+				break;
+		}
+
 		return {
 			tX: data.x,
 			tY: data.y,
-			x1: null,
-			y1: null,
-			x2: null,
-			y2: null,
+			x1: x1,
+			y1: y1,
+			x2: x2,
+			y2: y2,
 		};
 	},
 
