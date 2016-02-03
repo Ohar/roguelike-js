@@ -21,7 +21,7 @@ var GameCtrl = {
 		var x1, x2, y1, y2,
 			startAngle = data.look.direction * Math.PI / 2,
 			b = startAngle / 2,
-			A = data.look.range,
+			A = data.look.radius,
 			x = A * Math.sin(b),
 			y = A * Math.cos(b);
 
@@ -53,51 +53,39 @@ var GameCtrl = {
 		}
 
 		return {
-			tX: data.x,
-			tY: data.y,
-			x1: x1,
-			y1: y1,
-			x2: x2,
-			y2: y2,
+			radius: data.look.radius,
+			center: {
+				x: data.x,
+				y: data.y
+			},
+			startPoint: {
+				x: x1,
+				y: y1
+			},
+			endPoint: {
+				x: x2,
+				y: y2
+			}
 		};
 	},
 
-	// http://acmp.ru/article.asp?id_text=171
-	checkPointInsideSector: function (sector, point) {
-		return true;
+	// http://stackoverflow.com/questions/13652518/efficiently-find-points-inside-a-circle-sector
+	isPointInsideSector: function (sector, point) {
+		var relPoint = {
+			x: point.x - sector.center.x,
+			y: point.y - sector.center.y
+		};
 
-		console.info(InsideSector(1, 1, 5, 1, 1, 5, 3, 3)); // test1, yes Inside
-		console.info(InsideSector(1, 1, 5, 1, 7, 2, 3, 3)); // test2, no  Intersection
+		return !areClockwise(sector.start, relPoint)
+			&& areClockwise(sector.end, relPoint)
+			&& isWithinRadius(relPoint, sector.radius);
 
-		function sign (r) {
-			if (r = 0) {
-				return 0;
-			} else if (r < 0) {
-				return -1;
-			} else {
-				return 1;
-			}
+		function isWithinRadius (v, radius) {
+			return v.x * v.x + v.y * v.y <= Math.pow(radius, 2);
 		}
 
-		function InsideSector (tx, ty, x1, y1, x2, y2, px, py) {
-			var x = (tx + x1 + x2) / 3,
-				y = (ty + y1 + y2) / 3,
-				a1 = ty - y1,
-				a2 = ty - y2,
-				b1 = x1 - tx,
-				b2 = x2 - tx,
-				c1 = tx * y1 - ty * x1,
-				c2 = tx * y2 - ty * x2,
-				i1 = sign(a1 * x + b1 * y + c1),
-				i2 = sign(a2 * x + b2 * y + b2),
-				i3 = sign(a1 * px + b1 * py + c1),
-				i4 = sign(a2 * px + b2 * py + c2);
-
-			return Boolean(
-				   ((i1 === i3) && (i2 === i4))
-				|| ((i1 === 0) && (i2 === i4))
-				|| ((i1 === i3) && (i2 === 0))
-			);
+		function areClockwise (v1, v2) {
+			return -v1.x * v2.y + v1.y * v2.x > 0;
 		}
 	}
 };
