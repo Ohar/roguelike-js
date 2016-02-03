@@ -8,7 +8,7 @@ var ROWS = 30,
 	COLS = 50;
 
 // number of actors per level, including player
-var ACTORS = 25;
+var ACTORS = 5;
 
 
 // a list of all actors; i0 is the player
@@ -589,12 +589,16 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 
 		if (dir.x === 1) {
 			actor.sprite.frame = 2;
+			actor.look.direction = 0;
 		} else if (dir.x === -1) {
 			actor.sprite.frame = 3;
+			actor.look.direction = 2;
 		} else if (dir.y === -1) {
 			actor.sprite.frame = 1;
+			actor.look.direction = 3;
 		} else if (dir.y === 1) {
 			actor.sprite.frame = 0;
+			actor.look.direction = 1;
 		}
 
 		// moves actor to the new location
@@ -685,8 +689,8 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 		this.isPlayer = null;
 		this.damage = 'd8+2';
 		this.look = {
-			direction: 0, // Clockwise: 0, 1, 2, 3
-			angle: 2, // Radians
+			direction: 2, // Clockwise: 0, 1, 2, 3
+			angle: 6, // Radians
 			radius: 5,
 			cansee: function (point) {
 				var sector = GameCtrl.getSector(self),
@@ -785,10 +789,8 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 		};
 
 		// if player is far away, walk randomly
-		if (Math.abs(dx) + Math.abs(dy) > 6) {
-			moveToRandomPos();
-		} else {
-			// otherwise walk towards player
+		if (actor.look.cansee(player)) {
+			// walk towards player
 			// dumb walk
 
 			directions = directions.map(function (e) {
@@ -796,7 +798,7 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 					x: e.x,
 					y: e.y,
 					dist: Math.pow(dx + e.x, 2)
-					    + Math.pow(dy + e.y, 2)
+					+ Math.pow(dy + e.y, 2)
 				};
 			}).sort(function (a, b) {
 				return b.dist - a.dist; // Brave ones
@@ -809,6 +811,8 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 				}
 			}
 
+		} else {
+			moveToRandomPos();
 		}
 
 		if (player.hp < 1) {
