@@ -798,7 +798,7 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 					x: e.x,
 					y: e.y,
 					dist: Math.pow(dx + e.x, 2)
-					+ Math.pow(dy + e.y, 2)
+					    + Math.pow(dy + e.y, 2)
 				};
 			}).sort(function (a, b) {
 				return b.dist - a.dist; // Brave ones
