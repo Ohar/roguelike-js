@@ -76,8 +76,8 @@ var GameCtrl = {
 			y: point.y - sector.center.y
 		};
 
-		return !areClockwise(sector.start, relPoint)
-			&& areClockwise(sector.end, relPoint)
+		return !areClockwise(sector.startPoint, relPoint)
+			&& areClockwise(sector.endPoint, relPoint)
 			&& isWithinRadius(relPoint, sector.radius);
 
 		function isWithinRadius (v, radius) {
