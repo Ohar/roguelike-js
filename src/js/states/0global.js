@@ -19,8 +19,8 @@ var GameCtrl = {
 	getSector: function (data) {
 
 		var x1, x2, y1, y2,
-			startAngle = data.look.direction * Math.PI / 2,
-			b = startAngle / 2,
+			startAngle = Math.PI + data.look.direction * Math.PI / 2,
+			b = startAngle + (data.look.angle / 2),
 			A = data.look.radius,
 			x = A * Math.sin(b),
 			y = A * Math.cos(b);
