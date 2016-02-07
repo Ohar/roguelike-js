@@ -15,22 +15,21 @@ var GameCtrl = {
 		return distance;
 	},
 
-	// TODO: get sector sides
 	getSector: function (data) {
 
 		var x1, x2, y1, y2,
-			startAngle = Math.PI + data.look.direction * Math.PI / 2,
+			startAngle = data.look.direction * Math.PI / 2,
 			b = startAngle + (data.look.angle / 2),
 			A = data.look.radius,
-			x = A * Math.sin(b),
-			y = A * Math.cos(b);
+			x = Math.abs(A * Math.sin(b)),
+			y = Math.abs(A * Math.cos(b));
 
 		switch (data.look.direction) {
 			case 0:
 				x1 = data.x - x;
 				x2 = data.x + x;
-				y1 = y;
-				y2 = y;
+				y1 = -y;
+				y2 = -y;
 				break;
 			case 1:
 				x1 = x;
@@ -45,8 +44,8 @@ var GameCtrl = {
 				y2 = y;
 				break;
 			case 3:
-				x1 = x;
-				x2 = x;
+				x1 = -x;
+				x2 = -x;
 				y1 = data.y + y;
 				y2 = data.y - y;
 				break;
@@ -87,5 +86,172 @@ var GameCtrl = {
 		function areClockwise (v1, v2) {
 			return -v1.x * v2.y + v1.y * v2.x > 0;
 		}
+	},
+
+	// TODO: make nice tests
+	isPointInsideSectorTest: function () {
+		var sector = {
+			radius: 5,
+			center: {
+				x: 0,
+				y: 0
+			},
+			startPoint: {
+				x: -5 * Math.sin(Math.PI / 4),
+				y: -5 * Math.sin(Math.PI / 4)
+			},
+			endPoint: {
+				x: +5 * Math.sin(Math.PI / 4),
+				y: -5 * Math.sin(Math.PI / 4)
+			}
+		};
+
+		var points = [
+			{
+				x: 5,
+				y: -1,
+				result: false,
+			},
+			{
+				x: 5,
+				y: 1,
+				result: false,
+			},
+			{
+				x: 3,
+				y: 2,
+				result: false,
+			},
+			{
+				x: 2,
+				y: 3,
+				result: false,
+			},
+			{
+				x: 1,
+				y: 4,
+				result: false,
+			},
+			{
+				x: -1,
+				y: 4,
+				result: false,
+			},
+			{
+				x: 5,
+				y: 0,
+				result: false,
+			},
+			{
+				x: 3,
+				y: -2,
+				result: false,
+			},
+			{
+				x: 4,
+				y: -1,
+				result: false,
+			},
+			{
+				x: -4,
+				y: -1,
+				result: false,
+			},
+			{
+				x: 4,
+				y: -4,
+				result: false,
+			},
+			{
+				x: -4,
+				y: -4,
+				result: false,
+			},
+			{
+				x: 4,
+				y: -3,
+				result: false,
+			},
+			{
+				x: -4,
+				y: -3,
+				result: false,
+			},
+
+			{
+				x: 2,
+				y: -3,
+				result: true,
+			},
+			{
+				x: 1,
+				y: -1,
+				result: true,
+			},
+			{
+				x: -1,
+				y: -1,
+				result: true,
+			},
+			{
+				x: 2,
+				y: -2,
+				result: true,
+			},
+			{
+				x: -2,
+				y: -2,
+				result: true,
+			},
+			{
+				x: 3,
+				y: -3,
+				result: true,
+			},
+			{
+				x: -3,
+				y: -3,
+				result: true,
+			},
+			{
+				x: 3,
+				y: -4,
+				result: true,
+			},
+			{
+				x: -3,
+				y: -4,
+				result: true,
+			},
+			{
+				x: -2,
+				y: -3,
+				result: true,
+			},
+			{
+				x: 1,
+				y: -4,
+				result: true,
+			},
+			{
+				x: -1,
+				y: -4,
+				result: true,
+			},
+			{
+				x: 0,
+				y: 0,
+				result: true,
+			},
+		];
+
+		points.forEach(function (e) {
+			var result = GameCtrl.isPointInsideSector(sector, e),
+			okay = e.result === result;
+
+			if (!okay) {
+				console.log(e, result);
+			}
+		});
 	}
 };
