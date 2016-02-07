@@ -26,28 +26,28 @@ var GameCtrl = {
 
 		switch (data.look.direction) {
 			case 0:
-				x1 = data.x - x;
-				x2 = data.x + x;
-				y1 = -y;
-				y2 = -y;
+				x1 = - x;
+				x2 =   x;
+				y1 = - y;
+				y2 = - y;
 				break;
 			case 1:
-				x1 = x;
-				x2 = x;
-				y1 = data.y - y;
-				y2 = data.y + y;
+				x1 =   x;
+				x2 =   x;
+				y1 = - y;
+				y2 =   y;
 				break;
 			case 2:
-				x1 = data.x + x;
-				x2 = data.x - x;
-				y1 = y;
-				y2 = y;
+				x1 =   x;
+				x2 = - x;
+				y1 =   y;
+				y2 =   y;
 				break;
 			case 3:
-				x1 = -x;
-				x2 = -x;
-				y1 = data.y + y;
-				y2 = data.y - y;
+				x1 = - x;
+				x2 = - x;
+				y1 =   y;
+				y2 = - y;
 				break;
 		}
 
@@ -58,12 +58,12 @@ var GameCtrl = {
 				y: data.y
 			},
 			startPoint: {
-				x: x1,
-				y: y1
+				x: data.x + x1,
+				y: data.y + y1
 			},
 			endPoint: {
-				x: x2,
-				y: y2
+				x: data.x + x2,
+				y: data.y + y2
 			}
 		};
 	},
