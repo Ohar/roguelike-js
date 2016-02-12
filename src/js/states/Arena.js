@@ -589,16 +589,16 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 
 		if (dir.x === 1) {
 			actor.sprite.frame = 2;
-			actor.look.direction = 0;
+			actor.look.direction = 1;
 		} else if (dir.x === -1) {
 			actor.sprite.frame = 3;
-			actor.look.direction = 2;
+			actor.look.direction = 3;
 		} else if (dir.y === -1) {
 			actor.sprite.frame = 1;
-			actor.look.direction = 3;
+			actor.look.direction = 0;
 		} else if (dir.y === 1) {
 			actor.sprite.frame = 0;
-			actor.look.direction = 1;
+			actor.look.direction = 2;
 		}
 
 		// moves actor to the new location
