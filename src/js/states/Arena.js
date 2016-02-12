@@ -812,7 +812,7 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 			}
 
 		} else {
-			moveToRandomPos();
+			//moveToRandomPos();
 		}
 
 		if (player.hp < 1) {

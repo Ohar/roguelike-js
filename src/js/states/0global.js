@@ -80,174 +80,77 @@ var GameCtrl = {
 			&& isWithinRadius(relPoint, sector.radius);
 
 		function isWithinRadius (v, radius) {
-			return v.x * v.x + v.y * v.y <= Math.pow(radius, 2);
+			return Math.pow(v.x, 2) + Math.pow(v.y, 2) <= Math.pow(radius, 2);
 		}
 
 		function areClockwise (v1, v2) {
-			return -v1.x * v2.y + v1.y * v2.x > 0;
+			return v2.x * v1.y > v1.x * v2.y;
 		}
 	},
 
 	// TODO: make nice tests
 	isPointInsideSectorTest: function () {
+		var angle = Math.PI / 4;
 		var sector = {
 			radius: 5,
 			center: {
-				x: 0,
-				y: 0
+				x: 10,
+				y: 10
 			},
 			startPoint: {
-				x: -5 * Math.sin(Math.PI / 4),
-				y: -5 * Math.sin(Math.PI / 4)
+				get x () {
+					return  sector.radius * Math.sin(angle) + sector.center.x;
+				},
+				get y () {
+					return  sector.radius * Math.sin(angle) + sector.center.y;
+				}
 			},
 			endPoint: {
-				x: +5 * Math.sin(Math.PI / 4),
-				y: -5 * Math.sin(Math.PI / 4)
+				get x () {
+					return -sector.radius * Math.sin(angle) + sector.center.x;
+				},
+				get y () {
+					return  sector.radius * Math.sin(angle) + sector.center.y;
+				}
 			}
 		};
 
 		var points = [
-			{
-				x: 5,
-				y: -1,
-				result: false,
-			},
-			{
-				x: 5,
-				y: 1,
-				result: false,
-			},
-			{
-				x: 3,
-				y: 2,
-				result: false,
-			},
-			{
-				x: 2,
-				y: 3,
-				result: false,
-			},
-			{
-				x: 1,
-				y: 4,
-				result: false,
-			},
-			{
-				x: -1,
-				y: 4,
-				result: false,
-			},
-			{
-				x: 5,
-				y: 0,
-				result: false,
-			},
-			{
-				x: 3,
-				y: -2,
-				result: false,
-			},
-			{
-				x: 4,
-				y: -1,
-				result: false,
-			},
-			{
-				x: -4,
-				y: -1,
-				result: false,
-			},
-			{
-				x: 4,
-				y: -4,
-				result: false,
-			},
-			{
-				x: -4,
-				y: -4,
-				result: false,
-			},
-			{
-				x: 4,
-				y: -3,
-				result: false,
-			},
-			{
-				x: -4,
-				y: -3,
-				result: false,
-			},
+			{x:  0 + sector.center.x, y:  6 + sector.center.y, result: false},
+			{x:  0 + sector.center.x, y: -6 + sector.center.y, result: false},
+			{x:  5 + sector.center.x, y:  1 + sector.center.y, result: false},
+			{x:  5 + sector.center.x, y: -1 + sector.center.y, result: false},
+			{x:  3 + sector.center.x, y: -2 + sector.center.y, result: false},
+			{x:  2 + sector.center.x, y: -3 + sector.center.y, result: false},
+			{x:  1 + sector.center.x, y: -4 + sector.center.y, result: false},
+			{x: -1 + sector.center.x, y: -4 + sector.center.y, result: false},
+			{x:  5 + sector.center.x, y: -0 + sector.center.y, result: false},
+			{x:  3 + sector.center.x, y:  2 + sector.center.y, result: false},
+			{x:  4 + sector.center.x, y:  1 + sector.center.y, result: false},
+			{x: -4 + sector.center.x, y:  1 + sector.center.y, result: false},
+			{x:  4 + sector.center.x, y:  4 + sector.center.y, result: false},
+			{x: -4 + sector.center.x, y:  4 + sector.center.y, result: false},
+			{x:  4 + sector.center.x, y:  3 + sector.center.y, result: false},
+			{x: -4 + sector.center.x, y:  3 + sector.center.y, result: false},
 
-			{
-				x: 2,
-				y: -3,
-				result: true,
-			},
-			{
-				x: 1,
-				y: -1,
-				result: true,
-			},
-			{
-				x: -1,
-				y: -1,
-				result: true,
-			},
-			{
-				x: 2,
-				y: -2,
-				result: true,
-			},
-			{
-				x: -2,
-				y: -2,
-				result: true,
-			},
-			{
-				x: 3,
-				y: -3,
-				result: true,
-			},
-			{
-				x: -3,
-				y: -3,
-				result: true,
-			},
-			{
-				x: 3,
-				y: -4,
-				result: true,
-			},
-			{
-				x: -3,
-				y: -4,
-				result: true,
-			},
-			{
-				x: -2,
-				y: -3,
-				result: true,
-			},
-			{
-				x: 1,
-				y: -4,
-				result: true,
-			},
-			{
-				x: -1,
-				y: -4,
-				result: true,
-			},
-			{
-				x: 0,
-				y: 0,
-				result: true,
-			},
+			{x:  2 + sector.center.x, y:  3 + sector.center.y, result: true},
+			{x:  1 + sector.center.x, y:  1 + sector.center.y, result: true},
+			{x: -1 + sector.center.x, y:  1 + sector.center.y, result: true},
+			{x:  2 + sector.center.x, y:  2 + sector.center.y, result: true},
+			{x: -2 + sector.center.x, y:  2 + sector.center.y, result: true},
+			{x:  3 + sector.center.x, y:  3 + sector.center.y, result: true},
+			{x: -3 + sector.center.x, y:  3 + sector.center.y, result: true},
+			{x:  3 + sector.center.x, y:  4 + sector.center.y, result: true},
+			{x: -3 + sector.center.x, y:  4 + sector.center.y, result: true},
+			{x: -2 + sector.center.x, y:  3 + sector.center.y, result: true},
+			{x:  1 + sector.center.x, y:  4 + sector.center.y, result: true},
+			{x: -1 + sector.center.x, y:  4 + sector.center.y, result: true},
+			{x:  0 + sector.center.x, y: -0 + sector.center.y, result: true},
 		];
 
 		points.forEach(function (e) {
 			var result = GameCtrl.isPointInsideSector(sector, e),
-			okay = e.result === result;
+			    okay = e.result === result;
 
 			if (!okay) {
 				console.log(e, result);
