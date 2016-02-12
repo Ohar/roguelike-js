@@ -70,13 +70,12 @@ var GameCtrl = {
 
 	// http://stackoverflow.com/questions/13652518/efficiently-find-points-inside-a-circle-sector
 	isPointInsideSector: function (sector, point) {
-		var relPoint = {
-			x: point.x - sector.center.x,
-			y: point.y - sector.center.y
-		};
+		var relPoint = getRelPoint(point, sector.center),
+			relStart = getRelPoint(sector.startPoint, sector.center),
+			relEnd   = getRelPoint(sector.endPoint, sector.center);
 
-		return !areClockwise(sector.startPoint, relPoint)
-			&& areClockwise(sector.endPoint, relPoint)
+		return !areClockwise(relStart, relPoint)
+			&& areClockwise(relEnd, relPoint)
 			&& isWithinRadius(relPoint, sector.radius);
 
 		function isWithinRadius (v, radius) {
@@ -85,6 +84,13 @@ var GameCtrl = {
 
 		function areClockwise (v1, v2) {
 			return v2.x * v1.y > v1.x * v2.y;
+		}
+
+		function getRelPoint (p, center) {
+			return {
+				x: p.x - center.x,
+				y: p.y - center.y
+			};
 		}
 	},
 
@@ -102,7 +108,7 @@ var GameCtrl = {
 					return  sector.radius * Math.sin(angle) + sector.center.x;
 				},
 				get y () {
-					return  sector.radius * Math.sin(angle) + sector.center.y;
+					return  sector.radius * Math.cos(angle) + sector.center.y;
 				}
 			},
 			endPoint: {
@@ -110,7 +116,7 @@ var GameCtrl = {
 					return -sector.radius * Math.sin(angle) + sector.center.x;
 				},
 				get y () {
-					return  sector.radius * Math.sin(angle) + sector.center.y;
+					return  sector.radius * Math.cos(angle) + sector.center.y;
 				}
 			}
 		};
