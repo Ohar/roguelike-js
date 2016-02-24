@@ -588,17 +588,13 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 		}
 
 		if (dir.x === 1) {
-			actor.sprite.frame = 2;
-			actor.look.direction = 1;
+			actor.actions.rotate(1);
 		} else if (dir.x === -1) {
-			actor.sprite.frame = 3;
-			actor.look.direction = 3;
+			actor.actions.rotate(3);
 		} else if (dir.y === -1) {
-			actor.sprite.frame = 1;
-			actor.look.direction = 0;
+			actor.actions.rotate(0);
 		} else if (dir.y === 1) {
-			actor.sprite.frame = 0;
-			actor.look.direction = 2;
+			actor.actions.rotate(2);
 		}
 
 		// moves actor to the new location
@@ -699,6 +695,11 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 				return result;
 			}
 		};
+		this.actions = {
+			rotate: function (direction) {
+				rotate(self, direction);
+			},
+		};
 
 		if (game) {
 			this.game = game;
@@ -706,6 +707,27 @@ function generateMap (keyName, _cache, width, height, tilewidth, tileheight) {
 		} else {
 			this.game = null;
 			this.sprite = null;
+		}
+	}
+
+	function rotate (actor, direction) {
+		switch (direction) {
+			case 0: // Up
+				actor.sprite.frame = 1;
+				actor.look.direction = 0;
+				break;
+			case 1: // Right
+				actor.sprite.frame = 2;
+				actor.look.direction = 1;
+				break;
+			case 2: // Down
+				actor.sprite.frame = 0;
+				actor.look.direction = 2;
+				break;
+			case 3: // Down
+				actor.sprite.frame = 3;
+				actor.look.direction = 3;
+				break;
 		}
 	}
 
